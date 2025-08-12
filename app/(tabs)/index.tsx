@@ -10,6 +10,7 @@ import { createStyles } from "@/constants/styles"
 import * as ImagePicker from "expo-image-picker"
 import { useState } from "react"
 import { ImageSourcePropType, View } from "react-native"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
 
 const DefaultHeroImage = require("../../assets/images/background-image.png")
 
@@ -47,7 +48,7 @@ export default function Index() {
   }
 
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       <View style={styles.imageContainer}>
         <HeroImage source={heroImageSource} />
         {pickedEmoji && (
@@ -91,6 +92,6 @@ export default function Index() {
           onCloseModal={() => setIsModalVisible(false)}
         />
       </EmojiPicker>
-    </View>
+    </GestureHandlerRootView>
   )
 }
