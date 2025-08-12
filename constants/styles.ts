@@ -31,6 +31,14 @@ export const createStyles = (theme: Theme) => {
       height: 440,
       borderRadius: 18,
     },
+    optionsContainer: {
+      marginBottom: 24,
+    },
+    optionsRow: {
+      alignItems: "center",
+      flexDirection: "row",
+      gap: 32,
+    },
   })
 }
 export const styles = createStyles(getTheme("dark"))
