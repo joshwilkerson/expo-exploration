@@ -6,14 +6,12 @@ import * as ImagePicker from "expo-image-picker"
 import { useState } from "react"
 import { View } from "react-native"
 
-const PlaceholderImage = require("../../assets/images/background-image.png")
+const DefaultHeroImage = require("../../assets/images/background-image.png")
 
 export default function Index() {
   const theme = useTheme()
   const styles = createStyles(theme)
-  const [selectedImage, setSelectedImage] = useState<string | undefined>(
-    undefined
-  )
+  const [heroImageSource, setHeroImageSource] = useState(DefaultHeroImage)
 
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -23,7 +21,7 @@ export default function Index() {
     })
 
     if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri)
+      setHeroImageSource({ uri: result.assets[0].uri })
     } else {
       alert("You did not select any image.")
     }
@@ -32,7 +30,7 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <HeroImage src={PlaceholderImage} selectedImage={selectedImage} />
+        <HeroImage source={heroImageSource} />
       </View>
       <View style={styles.footerContainer}>
         <Button
