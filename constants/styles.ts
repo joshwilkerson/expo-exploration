@@ -31,27 +31,6 @@ export const createStyles = (theme: Theme) => {
       height: 440,
       borderRadius: 18,
     },
-    buttonContainer: {
-      width: 320,
-      height: 68,
-      marginHorizontal: 20,
-      alignItems: "center",
-      justifyContent: "center",
-      padding: 3,
-    },
-    button: {
-      borderRadius: 10,
-      width: "100%",
-      height: "100%",
-      alignItems: "center",
-      justifyContent: "center",
-      flexDirection: "row",
-      backgroundColor: theme.button.backgroundColor,
-    },
-    buttonLabel: {
-      color: theme.button.color,
-      fontSize: 16,
-    },
   })
 }
 export const styles = createStyles(getTheme("dark"))
