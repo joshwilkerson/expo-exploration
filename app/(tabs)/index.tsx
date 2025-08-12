@@ -8,9 +8,11 @@ import { IconButton } from "@/components/icon_button"
 import { useTheme } from "@/constants/hooks"
 import { createStyles } from "@/constants/styles"
 import * as ImagePicker from "expo-image-picker"
-import { useState } from "react"
+import * as MediaLibrary from "expo-media-library"
+import { useRef, useState } from "react"
 import { ImageSourcePropType, View } from "react-native"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
+import { captureRef } from "react-native-view-shot"
 
 const DefaultHeroImage = require("../../assets/images/background-image.png")
 
@@ -23,6 +25,13 @@ export default function Index() {
   const [pickedEmoji, setPickedEmoji] = useState<
     ImageSourcePropType | undefined
   >(undefined)
+  const [status, requestPermission] = MediaLibrary.usePermissions()
+
+  const imageRef = useRef<View>(null)
+
+  if (status === null) {
+    requestPermission()
+  }
 
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -44,16 +53,30 @@ export default function Index() {
   }
 
   const onSaveImageAsync = async () => {
-    // we will implement this later
+    try {
+      const localUri = await captureRef(imageRef, {
+        height: 440,
+        quality: 1,
+      })
+
+      await MediaLibrary.saveToLibraryAsync(localUri)
+      if (localUri) {
+        alert("Saved!")
+      }
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   return (
     <GestureHandlerRootView style={styles.container}>
       <View style={styles.imageContainer}>
-        <HeroImage source={heroImageSource} />
-        {pickedEmoji && (
-          <EmojiSticker imageSize={40} stickerSource={pickedEmoji} />
-        )}
+        <View ref={imageRef} collapsable={false}>
+          <HeroImage source={heroImageSource} />
+          {pickedEmoji && (
+            <EmojiSticker imageSize={40} stickerSource={pickedEmoji} />
+          )}
+        </View>
       </View>
       {showAppOptions ? (
         <View style={styles.optionsContainer}>
