@@ -1,12 +1,20 @@
-import { blue } from "@/constants/colors"
-import MaterialIcons from "@expo/vector-icons/MaterialIcons"
+import { useTheme } from "@/constants/hooks"
+import FontAwesome from "@expo/vector-icons/MaterialIcons"
 import { Pressable, StyleSheet, View } from "react-native"
 
 export function CircleButton({ onPress }: { onPress: () => void }) {
+  const theme = useTheme()
+
   return (
     <View style={styles.circleButtonContainer}>
-      <Pressable style={styles.circleButton} onPress={onPress}>
-        <MaterialIcons name="add" size={38} color="#fff" />
+      <Pressable
+        style={[
+          styles.circleButton,
+          { backgroundColor: theme.button.backgroundColor },
+        ]}
+        onPress={onPress}
+      >
+        <FontAwesome name="add" size={38} color={theme.button.color} />
       </Pressable>
     </View>
   )
@@ -24,6 +32,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 42,
-    backgroundColor: blue[50],
   },
 })

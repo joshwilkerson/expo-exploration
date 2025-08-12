@@ -14,7 +14,6 @@ export const createStyles = (theme: Theme) => {
       paddingTop: 28,
     },
     footerContainer: {
-      flex: 1 / 3,
       alignItems: "center",
     },
     text: {
@@ -32,12 +31,12 @@ export const createStyles = (theme: Theme) => {
       borderRadius: 18,
     },
     optionsContainer: {
-      marginBottom: 24,
+      paddingBottom: 40,
     },
     optionsRow: {
       alignItems: "center",
       flexDirection: "row",
-      gap: 32,
+      gap: 40,
     },
   })
 }
