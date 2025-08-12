@@ -50,6 +50,8 @@ export default function Index() {
 
   const onReset = () => {
     setShowAppOptions(false)
+    setPickedEmoji(undefined)
+    setHeroImageSource(DefaultHeroImage)
   }
 
   const onSaveImageAsync = async () => {
