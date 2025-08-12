@@ -64,6 +64,10 @@ export default function Index() {
     setNextEmojiId(prev => prev + 1)
   }
 
+  const removeEmoji = (emojiId: string) => {
+    setPickedEmojis(prev => prev.filter(emoji => emoji.id !== emojiId))
+  }
+
   const onSaveImageAsync = async () => {
     if (Platform.OS !== "web") {
       try {
@@ -105,8 +109,10 @@ export default function Index() {
           {pickedEmojis.map((emojiItem) => (
             <EmojiSticker 
               key={emojiItem.id} 
+              id={emojiItem.id}
               fontSize={40} 
-              emojiText={emojiItem.emoji} 
+              emojiText={emojiItem.emoji}
+              onRemove={removeEmoji}
             />
           ))}
         </View>
