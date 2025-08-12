@@ -9,6 +9,7 @@ type ButttonProps = {
   theme?: "primary" | "secondary"
   iconLeft?: ComponentProps<typeof FontAwesome>["name"]
   iconRight?: ComponentProps<typeof FontAwesome>["name"]
+  onPress?: () => void
 }
 
 const createStyles = (theme: Theme, buttonTheme?: "primary" | "secondary") => {
@@ -42,7 +43,13 @@ const createStyles = (theme: Theme, buttonTheme?: "primary" | "secondary") => {
   })
 }
 
-export function Button({ label, theme, iconLeft, iconRight }: ButttonProps) {
+export function Button({
+  label,
+  theme,
+  iconLeft,
+  iconRight,
+  onPress,
+}: ButttonProps) {
   const currentTheme = useTheme()
   const styles = createStyles(currentTheme, theme)
 
@@ -64,10 +71,7 @@ export function Button({ label, theme, iconLeft, iconRight }: ButttonProps) {
 
   return (
     <View style={styles.buttonContainer}>
-      <Pressable
-        style={styles.button}
-        onPress={() => alert("You pressed a button.")}
-      >
+      <Pressable style={styles.button} onPress={onPress}>
         {iconLeft && <Icon name={iconLeft} />}
         <Text style={styles.buttonLabel}>{label}</Text>
         {iconRight && <Icon name={iconRight} />}
