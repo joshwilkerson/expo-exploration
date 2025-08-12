@@ -1,20 +1,23 @@
 import { StyleSheet } from "react-native"
-import { neutral } from "./colors"
+import { getTheme, Theme } from "./theme"
 
-export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: neutral[10],
-  },
-  text: {
-    fontSize: 40,
-    color: "#fff",
-  },
-  link: {
-    fontSize: 20,
-    textDecorationLine: "underline",
-    color: "#fff",
-  },
-})
+export const createStyles = (theme: Theme) => {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: theme.background,
+    },
+    text: {
+      fontSize: 40,
+      color: theme.text.primary,
+    },
+    link: {
+      fontSize: 20,
+      textDecorationLine: "underline",
+      color: theme.text.link,
+    },
+  })
+}
+export const styles = createStyles(getTheme("dark"))
