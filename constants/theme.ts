@@ -18,6 +18,10 @@ export const getTheme = (colorScheme: ColorSchemeName) => {
       tabBarActiveText: isDark ? blue[50] : blue[50],
       tabBarInactiveText: isDark ? neutral[50] : neutral[30],
     },
+    button: {
+      backgroundColor: isDark ? blue[40] : blue[60],
+      color: isDark ? neutral[0] : neutral[100],
+    },
   }
 }
 
