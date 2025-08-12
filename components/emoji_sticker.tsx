@@ -6,23 +6,25 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated"
 
+const INITIAL_TOP_OFFSET = -350
+
 type EmojiStickerProps = {
   imageSize: number
   stickerSource: ImageSourcePropType
 }
 
 export function EmojiSticker({ imageSize, stickerSource }: EmojiStickerProps) {
-  const scaleImage = useSharedValue(imageSize)
+  const currentSize = useSharedValue(imageSize)
   const translateX = useSharedValue(0)
   const translateY = useSharedValue(0)
 
   const doubleTap = Gesture.Tap()
     .numberOfTaps(2)
     .onStart(() => {
-      if (scaleImage.value !== imageSize * 2) {
-        scaleImage.value = scaleImage.value * 2
+      if (currentSize.value !== imageSize * 2) {
+        currentSize.value = currentSize.value * 2
       } else {
-        scaleImage.value = Math.round(scaleImage.value / 2)
+        currentSize.value = Math.round(currentSize.value / 2)
       }
     })
 
@@ -33,32 +35,28 @@ export function EmojiSticker({ imageSize, stickerSource }: EmojiStickerProps) {
 
   const imageStyle = useAnimatedStyle(() => {
     return {
-      width: withSpring(scaleImage.value),
-      height: withSpring(scaleImage.value),
+      width: withSpring(currentSize.value),
+      height: withSpring(currentSize.value),
     }
   })
 
   const containerStyle = useAnimatedStyle(() => {
     return {
       transform: [
-        {
-          translateX: translateX.value,
-        },
-        {
-          translateY: translateY.value,
-        },
+        { translateX: translateX.value },
+        { translateY: translateY.value },
       ],
     }
   })
 
   return (
     <GestureDetector gesture={drag}>
-      <Animated.View style={[containerStyle, { top: -350 }]}>
+      <Animated.View style={[containerStyle, { top: INITIAL_TOP_OFFSET }]}>
         <GestureDetector gesture={doubleTap}>
           <Animated.Image
             source={stickerSource}
             resizeMode="contain"
-            style={[imageStyle, { width: imageSize, height: imageSize }]}
+            style={imageStyle}
           />
         </GestureDetector>
       </Animated.View>
