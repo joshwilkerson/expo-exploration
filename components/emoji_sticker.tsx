@@ -1,4 +1,3 @@
-import { ImageSourcePropType } from "react-native"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, {
   useAnimatedStyle,
@@ -9,22 +8,23 @@ import Animated, {
 const INITIAL_TOP_OFFSET = -350
 
 type EmojiStickerProps = {
-  imageSize: number
-  stickerSource: ImageSourcePropType
+  fontSize: number
+  emojiText: string
 }
 
-export function EmojiSticker({ imageSize, stickerSource }: EmojiStickerProps) {
-  const currentSize = useSharedValue(imageSize)
+export function EmojiSticker({ fontSize, emojiText }: EmojiStickerProps) {
+  const currentFontSize = useSharedValue(fontSize)
   const translateX = useSharedValue(0)
   const translateY = useSharedValue(0)
+  const scale = useSharedValue(1)
 
   const doubleTap = Gesture.Tap()
     .numberOfTaps(2)
     .onStart(() => {
-      if (currentSize.value !== imageSize * 2) {
-        currentSize.value = currentSize.value * 2
+      if (currentFontSize.value !== fontSize * 2) {
+        currentFontSize.value = currentFontSize.value * 2
       } else {
-        currentSize.value = Math.round(currentSize.value / 2)
+        currentFontSize.value = Math.round(currentFontSize.value / 2)
       }
     })
 
@@ -33,10 +33,22 @@ export function EmojiSticker({ imageSize, stickerSource }: EmojiStickerProps) {
     translateY.value += event.changeY
   })
 
-  const imageStyle = useAnimatedStyle(() => {
+  const pinch = Gesture.Pinch()
+    .onStart(() => {
+      scale.value = 1
+    })
+    .onUpdate((event) => {
+      scale.value = event.scale
+    })
+    .onEnd(() => {
+      currentFontSize.value = withSpring(Math.max(8, currentFontSize.value * scale.value))
+      scale.value = withSpring(1)
+    })
+
+  const textStyle = useAnimatedStyle(() => {
     return {
-      width: withSpring(currentSize.value),
-      height: withSpring(currentSize.value),
+      fontSize: withSpring(currentFontSize.value),
+      transform: [{ scale: scale.value }],
     }
   })
 
@@ -49,16 +61,15 @@ export function EmojiSticker({ imageSize, stickerSource }: EmojiStickerProps) {
     }
   })
 
+  const combinedGestures = Gesture.Exclusive(
+    doubleTap,
+    Gesture.Simultaneous(drag, pinch)
+  )
+
   return (
-    <GestureDetector gesture={drag}>
+    <GestureDetector gesture={combinedGestures}>
       <Animated.View style={[containerStyle, { top: INITIAL_TOP_OFFSET }]}>
-        <GestureDetector gesture={doubleTap}>
-          <Animated.Image
-            source={stickerSource}
-            resizeMode="contain"
-            style={imageStyle}
-          />
-        </GestureDetector>
+        <Animated.Text style={textStyle}>{emojiText}</Animated.Text>
       </Animated.View>
     </GestureDetector>
   )

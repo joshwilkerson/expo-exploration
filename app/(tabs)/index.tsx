@@ -11,7 +11,7 @@ import domtoimage from "dom-to-image"
 import * as ImagePicker from "expo-image-picker"
 import * as MediaLibrary from "expo-media-library"
 import { useRef, useState } from "react"
-import { ImageSourcePropType, Platform, View } from "react-native"
+import { Platform, View } from "react-native"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { captureRef } from "react-native-view-shot"
 
@@ -23,9 +23,8 @@ export default function Index() {
   const [heroImageSource, setHeroImageSource] = useState(DefaultHeroImage)
   const [showAppOptions, setShowAppOptions] = useState<boolean>(false)
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
-  const [pickedEmoji, setPickedEmoji] = useState<
-    ImageSourcePropType | undefined
-  >(undefined)
+  const [pickedEmojis, setPickedEmojis] = useState<{id: string, emoji: string}[]>([])
+  const [nextEmojiId, setNextEmojiId] = useState(1)
   const [status, requestPermission] = MediaLibrary.usePermissions()
 
   const imageRef = useRef<View>(null)
@@ -51,8 +50,18 @@ export default function Index() {
 
   const onReset = () => {
     setShowAppOptions(false)
-    setPickedEmoji(undefined)
+    setPickedEmojis([])
+    setNextEmojiId(1)
     setHeroImageSource(DefaultHeroImage)
+  }
+
+  const addEmoji = (emoji: string) => {
+    const newEmoji = {
+      id: `emoji-${nextEmojiId}`,
+      emoji: emoji
+    }
+    setPickedEmojis(prev => [...prev, newEmoji])
+    setNextEmojiId(prev => prev + 1)
   }
 
   const onSaveImageAsync = async () => {
@@ -93,9 +102,13 @@ export default function Index() {
       <View style={styles.imageContainer}>
         <View ref={imageRef} collapsable={false}>
           <HeroImage source={heroImageSource} />
-          {pickedEmoji && (
-            <EmojiSticker imageSize={40} stickerSource={pickedEmoji} />
-          )}
+          {pickedEmojis.map((emojiItem) => (
+            <EmojiSticker 
+              key={emojiItem.id} 
+              fontSize={40} 
+              emojiText={emojiItem.emoji} 
+            />
+          ))}
         </View>
       </View>
       {showAppOptions ? (
@@ -131,7 +144,7 @@ export default function Index() {
         onClose={() => setIsModalVisible(false)}
       >
         <EmojiList
-          onSelect={(item) => setPickedEmoji(item)}
+          onSelect={(emoji) => addEmoji(emoji)}
           onCloseModal={() => setIsModalVisible(false)}
         />
       </EmojiPicker>
